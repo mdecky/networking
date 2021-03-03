@@ -11,7 +11,7 @@ public enum HTTPMethod: String {
 
 public struct EmptyResponse: Decodable {}
 
-public protocol Requestable {
+public protocol Request {
     associatedtype Response: Decodable
 
     var path: String { get }
@@ -24,7 +24,7 @@ public protocol CustomResponseErrorProvider {
     func error(for data: Data?, response: URLResponse) -> Error
 }
 
-extension Requestable {
+extension Request {
     public var customHeaders: [String: String]? { return nil }
 
     public func urlRequest(baseURL: URL) throws -> URLRequest {

@@ -3,8 +3,8 @@ import Combine
 import Foundation
 
 public protocol ResponseValidation {
-    func validate<Request: Requestable>(
-        request: Request, response: URLResponse, data: Data) ->
+    func validate<R: Request>(
+        request: R, response: URLResponse, data: Data) ->
     AnyPublisher<Data, Error>
 }
 
@@ -15,8 +15,8 @@ final class HTTPResponseValidator: ResponseValidation {
         self.isCustomError = isCustomError
     }
     
-    func validate<Request: Requestable>(
-        request: Request, response: URLResponse, data: Data) ->
+    func validate<R: Request>(
+        request: R, response: URLResponse, data: Data) ->
     AnyPublisher<Data, Error>
     {
         Just((request: request, response: response, data: data))

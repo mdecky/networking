@@ -3,8 +3,8 @@ import Combine
 import Foundation
 
 public protocol ResponseDecoding {
-    func decode<Request: Requestable>(request: Request, data: Data) ->
-        AnyPublisher<Request.Response, Error>
+    func decode<R: Request>(request: R, data: Data) ->
+        AnyPublisher<R.Response, Error>
 }
 
 public final class JSONResponseDecoder: ResponseDecoding {
@@ -14,9 +14,9 @@ public final class JSONResponseDecoder: ResponseDecoding {
         self.decoder = decoder
     }
 
-    public func decode<Request>(request: Request, data: Data) -> AnyPublisher<Request.Response, Error> where Request : Requestable {
+    public func decode<R>(request: R, data: Data) -> AnyPublisher<R.Response, Error> where R : Request {
         Just(data)
-            .decode(type: Request.Response.self, decoder: decoder)
+            .decode(type: R.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 }

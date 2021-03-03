@@ -5,7 +5,7 @@
 import Foundation
 import Networking
 
-struct TestRequest: Requestable, CustomResponseErrorProvider {
+struct TestRequest: Request, CustomResponseErrorProvider {
     let path: String = "/test"
     let method: HTTPMethod? = .get
     let parameters: ParametersEncoding?
