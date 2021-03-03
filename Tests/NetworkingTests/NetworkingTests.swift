@@ -14,7 +14,7 @@ final class NetworkingTests: XCTestCase {
     func testNoConnectionFailure() throws {
         let request = TestRequest(responseType: .noConnection)
 
-        let publisher = session.send(request: request)
+        let publisher = session.publisher(for: request)
         let error = try expectError(publisher)
         
         XCTAssertEqual((error as? URLError), URLError(.notConnectedToInternet))
@@ -23,7 +23,7 @@ final class NetworkingTests: XCTestCase {
     func testServerErrorRequest() throws {
         let request = TestRequest(responseType: .statusCodeError)
 
-        let publisher = session.send(request: request)
+        let publisher = session.publisher(for: request)
         let error = try expectError(publisher)
         
         XCTAssert(error is HTTPValidationError)
@@ -32,7 +32,7 @@ final class NetworkingTests: XCTestCase {
     func testRequestErrorRequest() throws {
         let request = TestRequest(responseType: .requestCustomError)
 
-        let publisher = session.send(request: request)
+        let publisher = session.publisher(for: request)
         let error = try expectError(publisher)
         
         XCTAssert(error is TestRequest.ResponseError)
@@ -41,7 +41,7 @@ final class NetworkingTests: XCTestCase {
     func testInvalidDecodingRequest() throws {
         let request = TestRequest(responseType: .invalidData)
         
-        let publisher = session.send(request: request)
+        let publisher = session.publisher(for: request)
         let error = try expectError(publisher)
         
         XCTAssert(error is DecodingError)
@@ -50,7 +50,7 @@ final class NetworkingTests: XCTestCase {
     func testSuccessRequest() throws {
         let request = TestRequest(responseType: .success)
 
-        let publisher = session.send(request: request)
+        let publisher = session.publisher(for: request)
         let output = try expectValue(publisher)
             
         XCTAssertEqual(output.text, "success")

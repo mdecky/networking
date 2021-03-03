@@ -9,7 +9,6 @@ import XCTest
 extension XCTestCase {
     func expectValue<T: Publisher>(
         _ publisher: T,
-        timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> T.Output {
@@ -42,7 +41,6 @@ extension XCTestCase {
     
     func expectError<T: Publisher>(
         _ publisher: T,
-        timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> T.Failure {

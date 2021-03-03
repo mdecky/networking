@@ -18,16 +18,14 @@ public protocol Requestable {
     var method: HTTPMethod? { get }
     var parameters: ParametersEncoding? { get }
     var customHeaders: [String: String]? { get }
+}
 
-    func error(for data: Data?, statusCode: Int) -> Error
+public protocol CustomResponseErrorProvider {
+    func error(for data: Data?, response: URLResponse) -> Error
 }
 
 extension Requestable {
     public var customHeaders: [String: String]? { return nil }
-
-    public func error(for data: Data?, statusCode: Int) -> Error? {
-        return nil
-    }
 
     public func urlRequest(baseURL: URL) throws -> URLRequest {
         guard let url = URL(string: path, relativeTo: baseURL), url.isValid else {

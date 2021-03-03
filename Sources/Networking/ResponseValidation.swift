@@ -2,24 +2,31 @@
 import Combine
 import Foundation
 
-protocol ResponseValidation {
+public protocol ResponseValidation {
     func validate<Request: Requestable>(
         request: Request, response: URLResponse, data: Data) ->
     AnyPublisher<Data, Error>
 }
 
 final class HTTPResponseValidator: ResponseValidation {
+    let isCustomError: (HTTPURLResponse) -> Bool
+    
+    init(isCustomError: @escaping (HTTPURLResponse) -> Bool = { $0.statusCode == 400 }) {
+        self.isCustomError = isCustomError
+    }
+    
     func validate<Request: Requestable>(
         request: Request, response: URLResponse, data: Data) ->
     AnyPublisher<Data, Error>
     {
         Just((request: request, response: response, data: data))
             .tryMap { output -> Data in
-                guard let httpResponse = output.response as? HTTPURLResponse else {
+                guard let httpResponse = response as? HTTPURLResponse else {
                     throw URLError(URLError.Code.badServerResponse)
                 }
-                guard !httpResponse.isCustomRequestError else {
-                    throw output.request.error(for: output.data, statusCode: httpResponse.statusCode)
+                if self.isCustomError(httpResponse),
+                   let customErrorProvider = request as? CustomResponseErrorProvider {
+                    throw customErrorProvider.error(for: data, response: response)
                 }
                 guard httpResponse.isSuccesfulResponse else {
                     throw HTTPValidationError(response: httpResponse, data: output.data)
@@ -41,10 +48,6 @@ struct HTTPValidationError: Error, CustomDebugStringConvertible {
 }
 
 private extension HTTPURLResponse {
-    var isCustomRequestError: Bool {
-        return statusCode == 400
-    }
-
     var isSuccesfulResponse: Bool {
         (200..<300).contains(statusCode)
     }

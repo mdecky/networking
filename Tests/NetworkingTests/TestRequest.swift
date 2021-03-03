@@ -5,7 +5,7 @@
 import Foundation
 import Networking
 
-struct TestRequest: Requestable {
+struct TestRequest: Requestable, CustomResponseErrorProvider {
     let path: String = "/test"
     let method: HTTPMethod? = .get
     let parameters: ParametersEncoding?
@@ -17,8 +17,8 @@ struct TestRequest: Requestable {
     init(responseType: ResponseType) {
         parameters = URLQueryParameters(["response": responseType.rawValue])
     }
-
-    func error(for data: Data?, statusCode: Int) -> Error {
+    
+    func error(for data: Data?, response: URLResponse) -> Error {
         guard let data = data,
               let error = try? JSONDecoder().decode(ResponseError.self, from: data)
         else {

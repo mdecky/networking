@@ -16,7 +16,7 @@ final class SessionService {
         self.baseURL = baseURL
     }
 
-    func send<Request: Requestable>(request: Request) -> AnyPublisher<Request.Response, Error> {
+    func publisher<Request: Requestable>(for request: Request) -> AnyPublisher<Request.Response, Error> {
         let requestURL = try! request.urlRequest(baseURL: baseURL)
         return dataProvider.publisher(for: requestURL)
             .map { (request: request, response: $0.response, data: $0.data) }
