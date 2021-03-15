@@ -11,12 +11,18 @@ public enum HTTPMethod: String {
 
 public struct EmptyResponse: Decodable {}
 
+/// Protocol defining a HTTP request
 public protocol Request {
+    /// Response type for this request
     associatedtype Response: Decodable
 
+    /// Path for request url
     var path: String { get }
-    var method: HTTPMethod? { get }
-    var parameters: ParametersEncoding? { get }
+    /// HTTP method used for request
+    var method: HTTPMethod { get }
+    /// Parameters that will be encoded into the request
+    var parameters: ParametersEncoder? { get }
+    /// Custom HTTP headers that will be encoded into request
     var customHeaders: [String: String]? { get }
 }
 
@@ -25,6 +31,7 @@ public protocol CustomResponseErrorProvider {
 }
 
 extension Request {
+    public var parameters: ParametersEncoder? { return nil }
     public var customHeaders: [String: String]? { return nil }
 
     public func urlRequest(baseURL: URL) throws -> URLRequest {
@@ -32,7 +39,7 @@ extension Request {
             throw URLError(.badURL)
         }
         var request = URLRequest(url: url)
-        request.httpMethod = method?.rawValue
+        request.httpMethod = method.rawValue
         if let parameters = parameters {
             request = try parameters.encodeParameters(into: request)
         }

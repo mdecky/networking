@@ -1,11 +1,11 @@
 
 import Foundation
 
-public protocol ParametersEncoding {
+public protocol ParametersEncoder {
     func encodeParameters(into request: URLRequest) throws -> URLRequest
 }
 
-public final class JSONBodyParameters<Parameters: Encodable>: ParametersEncoding {
+public final class JSONBodyParameters<Parameters: Encodable>: ParametersEncoder {
     let parameters: Parameters
 
     private let jsonEncoder: JSONEncoder
@@ -24,7 +24,7 @@ public final class JSONBodyParameters<Parameters: Encodable>: ParametersEncoding
     }
 }
 
-public final class URLQueryParameters: ParametersEncoding {
+public final class URLQueryParameters: ParametersEncoder {
     let parameters: [String: CustomStringConvertible]
 
     public init(_ parameters: [String: CustomStringConvertible]) {

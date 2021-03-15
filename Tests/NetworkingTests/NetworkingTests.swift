@@ -55,4 +55,17 @@ final class NetworkingTests: XCTestCase {
             
         XCTAssertEqual(output.text, "success")
     }
+    
+    func testEmptyRequest() throws {
+        struct TestEmptyRequest: Request {
+            let path = "/test"
+            let method: HTTPMethod = .get
+            let parameters: ParametersEncoder? = URLQueryParameters(["response": TestRequest.ResponseType.emptySuccess.rawValue])
+            
+            typealias Response = EmptyResponse
+        }
+        
+        let publisher = session.publisher(for: TestEmptyRequest())
+        _ = try expectValue(publisher)
+    }
 }

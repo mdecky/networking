@@ -16,6 +16,7 @@ public final class JSONResponseDecoder: ResponseDecoding {
 
     public func decode<R>(request: R, data: Data) -> AnyPublisher<R.Response, Error> where R : Request {
         Just(data)
+            .map { (R.Response.self is EmptyResponse.Type) && data.isEmpty ? "{}".data(using: .utf8)! : $0 }
             .decode(type: R.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }

@@ -22,6 +22,8 @@ extension TestRequest.ResponseType {
         switch self {
         case .success:
             return .success((data: #"{"text":"success"}"#.data(using: .utf8)!, response: .success))
+        case .emptySuccess:
+            return .success((data: Data(), response: .success))
         case .noConnection:
             return .failure(URLError(.notConnectedToInternet))
         case .invalidData:

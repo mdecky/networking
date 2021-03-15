@@ -7,8 +7,8 @@ import Networking
 
 struct TestRequest: Request, CustomResponseErrorProvider {
     let path: String = "/test"
-    let method: HTTPMethod? = .get
-    let parameters: ParametersEncoding?
+    let method: HTTPMethod = .get
+    let parameters: ParametersEncoder?
 
     struct Response: Decodable {
         let text: String
@@ -38,6 +38,6 @@ struct TestRequest: Request, CustomResponseErrorProvider {
 
 extension TestRequest {
     enum ResponseType: String, CaseIterable {
-        case noConnection, invalidData, requestCustomError, statusCodeError, success
+        case noConnection, invalidData, requestCustomError, statusCodeError, success, emptySuccess
     }
 }
