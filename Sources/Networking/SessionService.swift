@@ -1,14 +1,14 @@
 import Combine
 import Foundation
 
-final class SessionService {
+public class SessionService {
     let dataProvider: DataProviding
     let validation: ResponseValidation
     let decoder: ResponseDecoding
 
     let baseURL: URL
 
-    init(baseURL: URL, dataProvider: DataProviding, validation: ResponseValidation, decoder: ResponseDecoding) {
+    public init(baseURL: URL, dataProvider: DataProviding, validation: ResponseValidation, decoder: ResponseDecoding) {
         self.dataProvider = dataProvider
         self.validation = validation
         self.decoder = decoder
@@ -16,7 +16,7 @@ final class SessionService {
         self.baseURL = baseURL
     }
 
-    func publisher<R: Request>(for request: R) -> AnyPublisher<R.Response, Error> {
+    public func publisher<R: Request>(for request: R) -> AnyPublisher<R.Response, Error> {
         let requestURL = try! request.urlRequest(baseURL: baseURL)
         return dataProvider.publisher(for: requestURL)
             .map { (request: request, response: $0.response, data: $0.data) }
