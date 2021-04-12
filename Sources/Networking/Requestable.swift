@@ -1,4 +1,5 @@
 
+import Combine
 import Foundation
 
 public enum HTTPMethod: String {

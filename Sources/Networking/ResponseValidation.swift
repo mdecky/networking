@@ -38,12 +38,17 @@ final class HTTPResponseValidator: ResponseValidation {
     }
 }
 
-struct HTTPValidationError: Error, CustomDebugStringConvertible {
+public struct HTTPValidationError: Error, CustomDebugStringConvertible {
     let response: HTTPURLResponse
     let data: Data
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "Request failed on validation with response: \(response) and data in base64: \(data.base64EncodedString())"
+    }
+    
+    public init(response: HTTPURLResponse, data: Data) {
+        self.response = response
+        self.data = data
     }
 }
 
